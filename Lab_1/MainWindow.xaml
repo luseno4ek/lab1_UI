@@ -1,0 +1,178 @@
+﻿<Window x:Class="Lab_1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab_1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800">
+    <Window.Resources>
+        <local:VMAccuracyConverter x:Key="VMAccuracyConv"/>
+        <local:VMTimeConverter x:Key="VMTimeConv"/>
+        <local:VMfunctionConverter x:Key="VMfConv"/>
+        <local:VMPointsConverter x:Key="VMpointConv"/>
+        <local:MinTimeScoresConverter x:Key="MinTimeConv"/>
+        <local:BenchmarckChangedConverter x:Key="BenchChangeConv"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="25" Height="25*"></RowDefinition>
+            <RowDefinition MaxHeight="25" Height="25*"></RowDefinition>
+            <RowDefinition Height="200*"></RowDefinition>
+            <RowDefinition Height="108*"></RowDefinition>
+            <RowDefinition Height="100*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New" Click="OnNew"/>
+                <MenuItem Header="Open" Click="OnOpen"/>
+                <MenuItem Header="Save" Click="OnSave"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="AddVMResults" Click="OnAddVMResults"/>
+                <MenuItem Header="AddVMTime" Click="OnAddVMTime"/>
+                <MenuItem Header="AddVMAccuracy" Click="OnAddVMAccuracy"/>
+            </MenuItem>
+        </Menu>
+        <TextBox Grid.Row="1" Grid.Column="0">Grid Params Initiation:</TextBox>
+        <ListBox Grid.Row="2" Grid.Column="0" ItemsSource="{
+            Binding CurrentGrid, 
+            Mode=TwoWay, 
+            RelativeSource={RelativeSource FindAncestor, 
+            AncestorType={x:Type Window}}, 
+            UpdateSourceTrigger=PropertyChanged}">
+            <TextBlock>Choose function from Intel OneAPI MKL:</TextBlock>
+            <ComboBox Name="FunctionFromMKL" Height="25" Width="120" VerticalAlignment="Top" 
+                      IsSynchronizedWithCurrentItem="True" 
+                      SelectedIndex="{
+                Binding CurrentGrid.Function, 
+                Converter={StaticResource VMfConv},
+                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}">
+                <ComboBoxItem IsSelected="True">vmdExp</ComboBoxItem>
+                <ComboBoxItem>vmdErf</ComboBoxItem>
+            </ComboBox>
+            <TextBlock>N samples:</TextBlock>
+            <TextBox  x:Name="NSamplesTextBox"  
+                      DataContext="{
+                        Binding CurrentGrid, 
+                        RelativeSource={RelativeSource FindAncestor, 
+                        AncestorType={x:Type local:MainWindow}},
+                        UpdateSourceTrigger=LostFocus,
+                        StringFormat={}{0:#},
+                        Mode=TwoWay}"
+                     Width="120" Height="18">
+                <TextBox.Text>
+                    <Binding Path="ArgLength"/>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock>Left point of interval:</TextBlock>
+            <TextBox x:Name="LeftPointTextBox" 
+                      DataContext="{
+                        Binding CurrentGrid, 
+                        RelativeSource={RelativeSource FindAncestor, 
+                        AncestorType={x:Type local:MainWindow}},
+                        UpdateSourceTrigger=LostFocus,
+                        StringFormat={}{0:#.##},
+                        Mode=TwoWay}"
+                     Width="120" Height="18">
+                <TextBox.Text>
+                    <Binding Path="FirstPoint"/>
+                </TextBox.Text>
+            </TextBox>
+            <TextBlock>Right point of interval:</TextBlock>
+            <TextBox  DataContext="{
+                        Binding CurrentGrid, 
+                        RelativeSource={RelativeSource FindAncestor, 
+                        AncestorType={x:Type local:MainWindow}},
+                        UpdateSourceTrigger=LostFocus,
+                        StringFormat={}{0:#.##},
+                        Mode=TwoWay}"
+                     Width="120" Height="18">
+                <TextBox.Text>
+                    <Binding Path="SecondPoint"/>
+                </TextBox.Text>
+            </TextBox>
+        </ListBox>
+
+        <TextBlock Grid.Row="3" Grid.Column="0"
+            Text="{Binding ViewData.Benchmark.MinTimeScores, 
+            Converter={StaticResource MinTimeConv}, 
+            Mode=OneWay, 
+            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+            VerticalAlignment="Center" 
+            TextAlignment="Center"
+        />
+        <TextBlock x:Name="SaveStatus" 
+                   HorizontalAlignment="Center" 
+                   Grid.Row="4" 
+                   Text="{
+            Binding ViewData.VMBenchmarkChanged, 
+            Converter={StaticResource BenchChangeConv}, 
+            Mode=TwoWay, 
+            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, 
+            UpdateSourceTrigger=PropertyChanged}" 
+                   Foreground="Red" 
+                   TextWrapping="Wrap" 
+                   VerticalAlignment="Center" 
+                   TextAlignment="Center"/>
+
+        <TextBox Grid.Row="1" Grid.Column="1">VMTime Collection:</TextBox>
+        <ListBox x:Name="VMtimeList" Grid.Row="2" Grid.Column="1" ItemsSource="{
+            Binding ViewData.Benchmark.TimeResults, 
+            RelativeSource={RelativeSource FindAncestor, 
+            AncestorType={x:Type Window}}, 
+            UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Grid.Function, StringFormat='Function:    \{0}'}"/>
+                        <TextBlock Text="{Binding Grid.ArgLength, StringFormat='N samples:   \{0}'}"/>
+                        <TextBlock Text="{Binding Grid.FirstPoint, StringFormat='Left Point:    \{0}'}"/>
+                        <TextBlock Text="{Binding Grid.SecondPoint, StringFormat='Right Point:      \{0}'}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock x:Name="VMTimeInfo" Grid.Row="4"  Grid.Column="1"
+                   Text="{
+            Binding SelectedItem,  
+            Converter={StaticResource VMTimeConv},  
+            ElementName=VMtimeList}" 
+                   TextWrapping="Wrap" 
+                   VerticalAlignment="Center" 
+                   TextAlignment="Center"/>
+
+        <TextBox Grid.Row="1" Grid.Column="2">VMAccuracy Collection:</TextBox>
+        <ListBox x:Name="VMAccuracyList" Grid.Row="2" Grid.Column="2" ItemsSource="{
+            Binding ViewData.Benchmark.AccuracyResults, 
+            RelativeSource={RelativeSource FindAncestor, 
+            AncestorType={x:Type Window}}, 
+            UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Grid.Function, StringFormat='Function:    \{0}'}"/>
+                        <TextBlock Text="{Binding Grid.ArgLength, StringFormat='N samples:   \{0}'}"/>
+                        <TextBlock Text="{Binding Grid.FirstPoint, StringFormat='Left Point:    \{0}'}"/>
+                        <TextBlock Text="{Binding Grid.SecondPoint, StringFormat='Right Point:      \{0}'}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock x:Name="VMAccuracyInfo" Grid.Column="2" 
+                   HorizontalAlignment="Center" Grid.Row="4" 
+                   Text="{
+            Binding SelectedItem,  
+            Converter={StaticResource VMAccuracyConv},  
+            ElementName=VMAccuracyList}" 
+                   TextWrapping="Wrap" 
+                   VerticalAlignment="Center" 
+                   TextAlignment="Center"/>
+
+    </Grid>
+</Window>
