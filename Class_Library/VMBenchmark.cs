@@ -100,19 +100,50 @@ namespace Class_Library
             double[] accurParams = new double[2];
             double maxDiffPoint = 0;
 
-            double[] args = new double[currGrid.ArgLength];
-            double gridStep = currGrid.GridStep;
-
-            args[0] = currGrid.Interval[0];
-            for (int i = 1; i < args.Length; i++)
+            if ((currGrid.Function == VMf.vmsExp) | (currGrid.Function == VMf.vmsErf))
             {
-                args[i] = args[i - 1] + gridStep;
+                float[] args = new float[currGrid.ArgLength];
+                float gridStep = (float)currGrid.GridStep;
+
+                args[0] = (float)currGrid.Interval[0];
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args[i] = args[i - 1] + gridStep;
+                }
+
+                if (currGrid.Function == VMf.vmsExp)
+                {
+                    MKL_vmsExp(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
+                else
+                {
+                    MKL_vmsErf(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
             }
+            else
+            {
+                double[] args = new double[currGrid.ArgLength];
+                double gridStep = currGrid.GridStep;
 
+                args[0] = currGrid.Interval[0];
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args[i] = args[i - 1] + gridStep;
+                }
 
-            MKL_vmdExp(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
-                ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
-
+                if (currGrid.Function == VMf.vmdExp)
+                {
+                    MKL_vmdExp(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
+                else
+                {
+                    MKL_vmdErf(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
+            }
 
             TimeResults.Add(new VMTime(currGrid, timeParams));
         }
@@ -125,18 +156,50 @@ namespace Class_Library
             double[] accurParams = new double[2];
             double maxDiffPoint = 0;
 
-            double[] args = new double[currGrid.ArgLength];
-            double gridStep = currGrid.GridStep;
-
-            args[0] = currGrid.Interval[0];
-            for (int i = 1; i < args.Length; i++)
+            if ((currGrid.Function == VMf.vmsExp) | (currGrid.Function == VMf.vmsErf))
             {
-                args[i] = args[i - 1] + gridStep;
+                float[] args = new float[currGrid.ArgLength];
+                float gridStep = (float)currGrid.GridStep;
+
+                args[0] = (float)currGrid.Interval[0];
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args[i] = args[i - 1] + gridStep;
+                }
+
+                if (currGrid.Function == VMf.vmsExp)
+                {
+                    MKL_vmsExp(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
+                else
+                {
+                    MKL_vmsErf(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
             }
+            else
+            {
+                double[] args = new double[currGrid.ArgLength];
+                double gridStep = currGrid.GridStep;
 
+                args[0] = currGrid.Interval[0];
+                for (int i = 1; i < args.Length; i++)
+                {
+                    args[i] = args[i - 1] + gridStep;
+                }
 
-            MKL_vmdExp(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
-                ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                if (currGrid.Function == VMf.vmdExp)
+                {
+                    MKL_vmdExp(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
+                else
+                {
+                    MKL_vmdErf(currGrid.ArgLength, args, ref timeParams[0], ref timeParams[1], ref timeParams[2],
+                    ref accurParams[0], ref accurParams[1], ref maxDiffPoint);
+                }
+            }
 
             AccuracyResults.Add(new VMAccuracy(currGrid, maxDiffPoint, accurParams));
         }
