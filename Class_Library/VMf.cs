@@ -3,6 +3,8 @@
     public enum VMf
     {
         vmdExp,
-        vmdErf
+        vmsExp,
+        vmdErf,
+        vmsErf
     }
 }

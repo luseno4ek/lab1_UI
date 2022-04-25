@@ -14,13 +14,16 @@ namespace Lab_1
             {
                 if (value != null)
                 {
-                    int val = (int)value;
-                    if (val == 0)
+                    switch(value)
                     {
-                        return VMf.vmdExp;
-                    } else
-                    {
-                        return VMf.vmdErf;
+                        case 0:
+                            return VMf.vmdExp;
+                        case 1:
+                            return VMf.vmsExp;
+                        case 2:
+                            return VMf.vmdErf;
+                        case 3:
+                            return VMf.vmsErf;
                     }
                 }
                 return "";
@@ -38,14 +41,16 @@ namespace Lab_1
             {
                 if (value != null)
                 {
-                    int val = (int)value;
-                    if (val == 0)
+                    switch (value)
                     {
-                        return VMf.vmdExp;
-                    }
-                    else
-                    {
-                        return VMf.vmdErf;
+                        case 0:
+                            return VMf.vmdExp;
+                        case 1:
+                            return VMf.vmsExp;
+                        case 2:
+                            return VMf.vmdErf;
+                        case 3:
+                            return VMf.vmsErf;
                     }
                 }
                 return "";

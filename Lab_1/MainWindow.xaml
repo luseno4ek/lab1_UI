@@ -54,7 +54,9 @@
                 Converter={StaticResource VMfConv},
                 RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}">
                 <ComboBoxItem IsSelected="True">vmdExp</ComboBoxItem>
+                <ComboBoxItem>vmsExp</ComboBoxItem>
                 <ComboBoxItem>vmdErf</ComboBoxItem>
+                <ComboBoxItem>vmsErf</ComboBoxItem>
             </ComboBox>
             <TextBlock>N samples:</TextBlock>
             <TextBox  x:Name="NSamplesTextBox"  
